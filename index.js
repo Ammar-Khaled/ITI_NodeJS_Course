@@ -6,14 +6,25 @@ const dotenv = require('dotenv');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
 const donationRouter = require('./routes/donation.routes');
+const helmet = require('helmet');
+const { sanitizeMongoInput } = require('express-v5-mongo-sanitize');
+const { xss } = require('express-xss-sanitizer');
+const hpp = require('hpp');
+const rateLimiter = require('./middlewares/rateLimiter');
 
 dotenv.config();
 
 const app = express();
 
 // global middleware
-app.use(express.json()); // middleware parses request body and adds it to req.body
+app.set('trust proxy', 1)
 app.use(cors());
+app.use(express.json());
+app.use(helmet())
+app.use(sanitizeMongoInput);
+app.use(xss());
+app.use(hpp());
+app.use(rateLimiter);
 
 // Routes
 app.use('/users', userRoutes);
