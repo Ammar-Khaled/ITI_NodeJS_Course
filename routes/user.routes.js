@@ -3,20 +3,23 @@ const router = express.Router();
 const userController = require('../controllers/user.controller');
 const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
+const authenticate = require('../middlewares/authenticate');
+const restrictTo = require('../middlewares/restrictTo');
 
-// Create a new user
-router.post('/', validate(schemas.users.createUserSchema), userController.createUser);
+router.post('/sign-up', validate(schemas.users.signUpSchema), userController.signUp);
+
+router.post('/sign-in', validate(schemas.users.signInSchema), userController.signIn);
 
 // Get all users
-router.get('/', validate(schemas.users.getAllUsersSchema), userController.getAllUsers);
+router.get('/', authenticate, restrictTo(['admin']), validate(schemas.users.getAllUsersSchema), userController.getAllUsers);
 
 // Get user by ID
-router.get('/:id', userController.getUserById);
+router.get('/:id', authenticate, restrictTo(['admin']), userController.getUserById);
 
 // Update user by ID
-router.patch('/:id', validate(schemas.users.updateUserSchema), userController.updateUser);
+router.patch('/:id', authenticate, restrictTo(['admin']), validate(schemas.users.updateUserSchema), userController.updateUser);
 
 // Delete user by ID
-router.delete('/:id', userController.deleteUser);
+router.delete('/:id', authenticate, restrictTo(['admin']), userController.deleteUser);
 
 module.exports = router;

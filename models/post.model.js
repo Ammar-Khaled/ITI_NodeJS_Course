@@ -8,6 +8,7 @@ const postSchema = new mongoose.Schema({
     tags: { type: [String], required: false },
     published: { type: Boolean, default: false },
     likes: { type: Number, default: 0 },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true });
 // model
 const Post = mongoose.model('Post', postSchema);

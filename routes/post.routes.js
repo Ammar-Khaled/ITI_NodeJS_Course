@@ -3,6 +3,10 @@ const router = express.Router();
 const postController = require('../controllers/post.controller');
 const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
+const authenticate = require('../middlewares/authenticate');
+
+// Apply authentication to all routes
+router.use(authenticate);
 
 // Create a new post
 router.post('/', validate(schemas.posts.createPostSchema), postController.createPost);

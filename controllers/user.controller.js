@@ -1,93 +1,67 @@
-const mongoose = require('mongoose');
 const userService = require('../services/user.service');
 const APIError = require('../utils/APIError');
 
-// Create a new user
-exports.createUser = async (req, res) => {
-    try {
-        const { name, email, password, age } = req.body;
+exports.signUp = async (req, res) => {
+    const { name, email, password, age } = req.body;
+    const user = await userService.signUp({ name, email, password, age });
+    res.status(201).json({ message: "User created successfully", data: user });
+};
 
-        const user = await userService.createUser({ name, email, password, age });
-
-        res.status(201).json({ message: "User created successfully", data: user });
-    } catch (error) {
-        throw new APIError(error.message, 500);
-    }
+exports.signIn = async (req, res) => {
+    const { email, password } = req.body;
+    const { token, user } = await userService.signIn({ email, password });
+    res.status(200).json({ message: "User signed in successfully", data: { token, user } });
 };
 
 // Get all users with pagination
 exports.getAllUsers = async (req, res) => {
-    try {
-        let { page = 1, limit = 10 } = req.query;
-        page = Number(page);
-        limit = Number(limit);
+    let { page = 1, limit = 10 } = req.query;
+    page = Number(page);
+    limit = Number(limit);
 
-        const [users, total] = await userService.getAllUsers(page, limit);
+    const [users, total] = await userService.getAllUsers(page, limit);
 
-        res.json({
-            message: "Users fetched successfully",
-            data: users,
-            pagenation: {
-                page,
-                limit,
-                total,
-                totalPages: Math.ceil(total / limit)
-            }
-        });
-    } catch (error) {
-        throw new APIError(error.message, 500);
-    }
+    res.json({
+        message: "Users fetched successfully",
+        data: users,
+        pagenation: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit)
+        }
+    });
 };
 
 // Get user by ID
 exports.getUserById = async (req, res) => {
-    try {
-        const { id } = req.params;
+    const { id } = req.params;
+    const user = await userService.getUserById(id);
 
-        const user = await userService.getUserById(id);
-
-        if (!user) {
-            throw new APIError("User not found", 404);
-        }
-
-        res.json({ message: "User fetched successfully", data: user });
-    } catch (error) {
-        throw new APIError(error.message, 500);
+    if (!user) {
+        throw new APIError("User not found", 404);
     }
+
+    res.json({ message: "User fetched successfully", data: user });
 };
 
 // Update user by ID
 exports.updateUser = async (req, res) => {
-    try {
-        const { id } = req.params;
+    const { id } = req.params;
+    const { name, email, age } = req.body;
 
-        const { name, email, age } = req.body;
+    const updatedUser = await userService.updateUser(id, { name, email, age });
 
-        const updatedUser = await userService.updateUser(id, { name, email, age });
-
-        if (!updatedUser) {
-            throw new APIError("User not found", 404)
-        }
-
-        res.json({ message: "User updated successfully", data: updatedUser });
-    } catch (error) {
-        throw new APIError(error.message, 500);
+    if (!updatedUser) {
+        throw new APIError("User not found", 404);
     }
+
+    res.json({ message: "User updated successfully", data: updatedUser });
 };
 
 // Delete user by ID
 exports.deleteUser = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const deletedUser = await userService.deleteUser(id);
-
-        if (!deletedUser) {
-            throw new APIError("User not found", 404)
-        }
-
-        res.json({ message: "User deleted successfully" });
-    } catch (error) {
-        throw new APIError(error.message, 500);
-    }
+    const { id } = req.params;
+    const deletedUser = await userService.deleteUser(id);
+    res.json({ message: "User deleted successfully", deletedUser });
 };
