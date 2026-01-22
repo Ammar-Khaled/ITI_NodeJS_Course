@@ -5,6 +5,7 @@ const postRoutes = require('./routes/post.routes');
 const dotenv = require('dotenv');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
+const donationRouter = require('./routes/donation.routes');
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(cors());
 // Routes
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
+app.use('/donations', donationRouter);
 
 // Global Error Handler
 app.use(errorHandler);
