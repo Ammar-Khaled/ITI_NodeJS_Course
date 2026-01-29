@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user.routes');
 const postRoutes = require('./routes/post.routes');
+const commentRoutes = require('./routes/comment.routes');
 const dotenv = require('dotenv');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
@@ -30,6 +31,7 @@ app.use(rateLimiter);
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/donations', donationRouter);
+app.use('/comments', commentRoutes);
 
 // Global Error Handler
 app.use(errorHandler);

@@ -3,10 +3,10 @@ const APIError = require('../utils/APIError');
 
 // Create a new post
 exports.createPost = async (req, res) => {
-    const { title, content, author, tags, published, likes } = req.body;
+    const { title, content, tags, published, likes } = req.body;
     const { userId } = req.user;
 
-    const post = await postService.createPost({ title, content, author, tags, published, likes, userId });
+    const post = await postService.createPost({ title, content, tags, published, likes, userId });
 
     res.status(201).json({ message: "Post created successfully", data: post });
 };
@@ -50,9 +50,9 @@ exports.getPostById = async (req, res) => {
 exports.updatePost = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.user;
-    const { title, content, author, tags, published, likes } = req.body;
+    const { title, content, tags, published, likes } = req.body;
 
-    const updatedPost = await postService.updatePost(id, { title, content, author, tags, published, likes }, userId);
+    const updatedPost = await postService.updatePost(id, { title, content, tags, published, likes }, userId);
 
     if (!updatedPost) {
         throw new APIError("Post not found", 404);

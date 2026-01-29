@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/post.controller');
+const commentController = require('../controllers/comment.controller');
 const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
 const authenticate = require('../middlewares/authenticate');
@@ -22,5 +23,8 @@ router.patch('/:id', validate(schemas.posts.updatePostSchema), postController.up
 
 // Delete post by ID
 router.delete('/:id', postController.deletePost);
+
+// Get comments for a specific post
+router.get('/:postId/comments', commentController.getCommentsByPost);
 
 module.exports = router;
