@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Our Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header .logo {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 24px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .message {
+            color: #555555;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+        .features {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .features h3 {
+            color: #333333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .features li {
+            padding: 10px 0;
+            color: #555555;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .features li:last-child {
+            border-bottom: none;
+        }
+        .features li::before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .footer {
+            background-color: #2d3748;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .divider {
+            height: 1px;
+            background-color: #e9ecef;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📝</div>
+            <h1>Welcome to Our Blog!</h1>
+        </div>
+        
+        <div class="content">
+            <h2 class="greeting">Hello, {{userName}}! 👋</h2>
+            
+            <p class="message">
+                We're thrilled to have you join our community! Your account has been successfully created 
+                and you're now part of a growing community of writers and readers.
+            </p>
+            
+            <div class="features">
+                <h3>Here's what you can do:</h3>
+                <ul>
+                    <li>Create and publish your own blog posts</li>
+                    <li>Engage with other writers through comments</li>
+                    <li>Like and bookmark your favorite articles</li>
+                    <li>Follow authors whose content you love</li>
+                    <li>Get notified about new content and interactions</li>
+                </ul>
+            </div>
+            
+            <p class="message">
+                Ready to share your first story with the world? Click the button below to get started!
+            </p>
+            
+            <div class="cta-section">
+                <a href="{{frontendUrl}}/dashboard" class="cta-button">Go to Dashboard</a>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <p class="message">
+                If you have any questions or need assistance, don't hesitate to reach out to our support team. 
+                We're here to help you succeed!
+            </p>
+        </div>
+        
+        <div class="footer">
+            <div class="social-links">
+                <a href="#">Twitter</a>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+            </div>
+            <p>You're receiving this email because you signed up for an account.</p>
+            <p>© {{currentYear}} Our Blog. All rights reserved.</p>
+            <p>
+                <a href="{{frontendUrl}}/unsubscribe">Unsubscribe</a> | 
+                <a href="{{frontendUrl}}/privacy">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

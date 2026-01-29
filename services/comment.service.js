@@ -1,4 +1,8 @@
 const Comment = require('../models/comment.model');
+const Post = require('../models/post.model');
+const User = require('../models/user.model');
+const APIError = require('../utils/APIError');
+const { sendCommentNotification, sendReplyNotification } = require('./email');
 
 const MAX_COMMENT_DEPTH = 2; // Max nesting level (0 = root, 1 = reply, 2 = reply to reply)
 
@@ -32,6 +36,40 @@ const createComment = async (commentData, userId) => {
         ...commentData,
         userId
     });
+
+    // Send notification emails (non-blocking)
+    (async () => {
+        try {
+            const commenter = await User.findById(userId);
+            const post = await Post.findById(comment.postId).populate('userId');
+
+            if (parentCommentId) {
+                // This is a reply to a comment
+                const parentComment = await Comment.findById(parentCommentId).populate('userId');
+                if (parentComment && parentComment.userId) {
+                    await sendReplyNotification(
+                        parentComment.userId,  // commentAuthor
+                        commenter,             // replier
+                        parentComment,         // original comment
+                        comment,               // reply
+                        post                   // post
+                    );
+                }
+            } else {
+                // This is a new comment on a post
+                if (post && post.userId) {
+                    await sendCommentNotification(
+                        post.userId,  // postAuthor
+                        commenter,    // commenter
+                        post,         // post
+                        comment       // comment
+                    );
+                }
+            }
+        } catch (err) {
+            console.error('Failed to send comment notification:', err);
+        }
+    })();
 
     return await comment.populate('userId', 'name email');
 };

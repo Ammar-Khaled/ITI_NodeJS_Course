@@ -1,6 +1,7 @@
 const userService = require('../services/user.service');
 const APIError = require('../utils/APIError');
 
+
 exports.signUp = async (req, res) => {
     const { name, email, password, age } = req.body;
     const user = await userService.signUp({ name, email, password, age });
@@ -64,4 +65,27 @@ exports.deleteUser = async (req, res) => {
     const { id } = req.params;
     const deletedUser = await userService.deleteUser(id);
     res.json({ message: "User deleted successfully", deletedUser });
+};
+
+// Request password reset (forgot password)
+exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    const result = await userService.forgotPassword(email);
+    res.json(result);
+};
+
+// Reset password with token
+exports.resetPassword = async (req, res) => {
+    const { token, password } = req.body;
+    const result = await userService.resetPassword(token, password);
+    res.json(result);
+};
+
+// Change password when logged in
+exports.changePassword = async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const { userId } = req.user;
+
+    const result = await userService.changePassword(userId, currentPassword, newPassword);
+    res.json(result);
 };

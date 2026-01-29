@@ -13,7 +13,6 @@ const { sanitizeMongoInput } = require('express-v5-mongo-sanitize');
 const { xss } = require('express-xss-sanitizer');
 const hpp = require('hpp');
 const rateLimiter = require('./middlewares/rateLimiter');
-
 dotenv.config();
 
 const app = express();
@@ -47,5 +46,5 @@ app.listen(port, () => {
         console.log('❌❌ Connected to MongoDB')
         console.log(err)
     });
-    console.log('✅✅ Server is running on Port:3000');
+    console.log('✅✅ Server is running on Port:', port);
 });

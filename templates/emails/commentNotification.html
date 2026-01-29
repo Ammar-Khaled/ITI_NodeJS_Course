@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Comment on Your Post</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .header .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 22px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .message {
+            color: #555555;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+        .highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+        .post-card {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid #667eea;
+        }
+        .post-card h3 {
+            color: #333333;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .post-card .post-meta {
+            color: #888888;
+            font-size: 13px;
+        }
+        .comment-card {
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .commenter-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .commenter-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+        .commenter-details h4 {
+            color: #333333;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+        .commenter-details .time {
+            color: #888888;
+            font-size: 13px;
+        }
+        .comment-content {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            color: #444444;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 35px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 10px 5px;
+        }
+        .cta-button.secondary {
+            background: #ffffff;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .engagement-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #888888;
+            text-transform: uppercase;
+        }
+        .footer {
+            background-color: #2d3748;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .notification-settings {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #4a5568;
+        }
+        .divider {
+            height: 1px;
+            background-color: #e9ecef;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon">💬</div>
+            <h1>New Comment on Your Post!</h1>
+        </div>
+        
+        <div class="content">
+            <h2 class="greeting">Hey {{postAuthorName}}! 👋</h2>
+            
+            <p class="message">
+                Great news! <span class="highlight">{{commenterName}}</span> just commented on your post. 
+                Your content is sparking conversations!
+            </p>
+            
+            <div class="post-card">
+                <h3>📝 {{postTitle}}</h3>
+                <p class="post-meta">Posted on {{postDate}}</p>
+            </div>
+            
+            <div class="comment-card">
+                <div class="commenter-info">
+                    <div class="commenter-avatar">{{commenterInitial}}</div>
+                    <div class="commenter-details">
+                        <h4>{{commenterName}}</h4>
+                        <span class="time">{{commentDate}}</span>
+                    </div>
+                </div>
+                <div class="comment-content">
+                    {{commentContent}}
+                </div>
+            </div>
+            
+            <div class="cta-section">
+                <a href="{{postUrl}}" class="cta-button">View Comment</a>
+                <a href="{{replyUrl}}" class="cta-button secondary">Reply</a>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="engagement-stats">
+                <div class="stat-item">
+                    <div class="stat-number">{{totalComments}}</div>
+                    <div class="stat-label">Comments</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{totalLikes}}</div>
+                    <div class="stat-label">Likes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{totalViews}}</div>
+                    <div class="stat-label">Views</div>
+                </div>
+            </div>
+            
+            <p class="message" style="text-align: center; font-size: 14px; color: #888;">
+                Keep creating amazing content! Your readers appreciate you. 🌟
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>You're receiving this because someone commented on your post.</p>
+            <div class="notification-settings">
+                <p>
+                    <a href="{{frontendUrl}}/settings/notifications">Manage notification preferences</a>
+                </p>
+            </div>
+            <p>© {{currentYear}} Our Blog. All rights reserved.</p>
+            <p>
+                <a href="{{frontendUrl}}/unsubscribe">Unsubscribe</a> | 
+                <a href="{{frontendUrl}}/privacy">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

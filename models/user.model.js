@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     role: { type: String, required: true, enum: ['admin', 'user'], default: 'user' },
     age: { type: Number, required: true, min: 18, max: 150 },
+    passwordResetToken: { type: String },
+    passwordResetExpires: { type: Date }
 }, { timestamps: true });
 
 // model
