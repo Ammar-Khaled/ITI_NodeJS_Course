@@ -11,11 +11,11 @@ router.post('/sign-up', validate(schemas.users.signUpSchema), userController.sig
 router.post('/sign-in', validate(schemas.users.signInSchema), userController.signIn);
 
 // Password reset routes (public)
-router.post('/forgot-password', userController.forgotPassword);
-router.post('/reset-password', userController.resetPassword);
+router.post('/forgot-password', validate(schemas.users.forgotPasswordSchema), userController.forgotPassword);
+router.post('/reset-password', validate(schemas.users.resetPasswordSchema), userController.resetPassword);
 
 // Change password (authenticated)
-router.patch('/change-password', authenticate, userController.changePassword);
+router.patch('/change-password', validate(schemas.users.changePasswordSchema), authenticate, userController.changePassword);
 
 // Get all users
 router.get('/', authenticate, restrictTo(['admin']), validate(schemas.users.getAllUsersSchema), userController.getAllUsers);
