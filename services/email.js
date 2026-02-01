@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
-require('dotenv').config();
+
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
 

@@ -74,3 +74,25 @@ exports.deletePost = async (req, res) => {
 
     res.json({ message: "Post deleted successfully" });
 };
+
+// Upload images to post
+exports.uploadPostImages = async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.user;
+
+    if (!req.files || req.files.length === 0) {
+        throw new APIError("No files uploaded", 400);
+    }
+
+    const result = await postService.uploadPostImages(id, userId, req.files);
+    res.json({ message: "Images uploaded successfully", data: result });
+};
+
+// Delete post image
+exports.deletePostImage = async (req, res) => {
+    const { id, imageId } = req.params;
+    const { userId } = req.user;
+
+    const result = await postService.deletePostImage(id, imageId, userId);
+    res.json(result);
+};

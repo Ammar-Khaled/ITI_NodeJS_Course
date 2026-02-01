@@ -5,6 +5,7 @@ const commentController = require('../controllers/comment.controller');
 const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
 const authenticate = require('../middlewares/authenticate');
+const { uploadPostImages } = require('../middlewares/upload');
 
 // Apply authentication to all routes
 router.use(authenticate);
@@ -23,6 +24,10 @@ router.patch('/:id', validate(schemas.posts.updatePostSchema), postController.up
 
 // Delete post by ID
 router.delete('/:id', postController.deletePost);
+
+// Post images routes
+router.post('/:id/images', uploadPostImages, postController.uploadPostImages);
+router.delete('/:id/images/:imageId', postController.deletePostImage);
 
 // Get comments for a specific post
 router.get('/:postId/comments', commentController.getCommentsByPost);

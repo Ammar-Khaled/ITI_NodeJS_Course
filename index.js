@@ -1,10 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user.routes');
 const postRoutes = require('./routes/post.routes');
 const commentRoutes = require('./routes/comment.routes');
 const likeRoutes = require('./routes/like.routes');
-const dotenv = require('dotenv');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
 const donationRouter = require('./routes/donation.routes');
@@ -13,7 +13,6 @@ const { sanitizeMongoInput } = require('express-v5-mongo-sanitize');
 const { xss } = require('express-xss-sanitizer');
 const hpp = require('hpp');
 const rateLimiter = require('./middlewares/rateLimiter');
-dotenv.config();
 
 const app = express();
 
@@ -37,8 +36,8 @@ app.use('/likes', likeRoutes);
 // Global Error Handler
 app.use(errorHandler);
 
-port = process.env.PORT || 3000;
-mongoUri = process.env.MONGODB_URI;
+const port = process.env.PORT || 3000;
+const mongoUri = process.env.MONGODB_URI;
 app.listen(port, () => {
     mongoose.connect(mongoUri).then(() => {
         console.log('✅✅ Connected to MongoDB')

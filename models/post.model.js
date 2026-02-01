@@ -8,6 +8,11 @@ const postSchema = new mongoose.Schema({
     published: { type: Boolean, default: false },
     likes: { type: Number, default: 0 },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    images: [{
+        url: { type: String, required: true },
+        fileId: { type: String, required: true }, // ImageKit file ID for deletion
+        name: { type: String }
+    }]
 }, { timestamps: true });
 // model
 const Post = mongoose.model('Post', postSchema);

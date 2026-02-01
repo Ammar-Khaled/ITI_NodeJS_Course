@@ -89,3 +89,23 @@ exports.changePassword = async (req, res) => {
     const result = await userService.changePassword(userId, currentPassword, newPassword);
     res.json(result);
 };
+
+// Upload profile picture
+exports.uploadProfilePicture = async (req, res) => {
+    const { userId } = req.user;
+
+    if (!req.file) {
+        throw new APIError('No file uploaded', 400);
+    }
+
+    const result = await userService.uploadProfilePicture(userId, req.file);
+    res.json({ message: 'Profile picture uploaded successfully', data: result });
+};
+
+// Delete profile picture
+exports.deleteProfilePicture = async (req, res) => {
+    const { userId } = req.user;
+
+    const result = await userService.deleteProfilePicture(userId);
+    res.json(result);
+};

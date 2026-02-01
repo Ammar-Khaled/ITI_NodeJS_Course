@@ -5,9 +5,10 @@ const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
 const authenticate = require('../middlewares/authenticate');
 const restrictTo = require('../middlewares/restrictTo');
+const { uploadProfilePicture } = require('../middlewares/upload');
+
 
 router.post('/sign-up', validate(schemas.users.signUpSchema), userController.signUp);
-
 router.post('/sign-in', validate(schemas.users.signInSchema), userController.signIn);
 
 // Password reset routes (public)
@@ -16,6 +17,10 @@ router.post('/reset-password', validate(schemas.users.resetPasswordSchema), user
 
 // Change password (authenticated)
 router.patch('/change-password', validate(schemas.users.changePasswordSchema), authenticate, userController.changePassword);
+
+// Profile picture routes (authenticated)
+router.post('/profile-picture', authenticate, uploadProfilePicture, userController.uploadProfilePicture);
+router.delete('/profile-picture', authenticate, userController.deleteProfilePicture);
 
 // Get all users
 router.get('/', authenticate, restrictTo(['admin']), validate(schemas.users.getAllUsersSchema), userController.getAllUsers);

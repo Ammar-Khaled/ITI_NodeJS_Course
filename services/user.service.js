@@ -5,6 +5,7 @@ const APIError = require('../utils/APIError');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mailer = require('../services/email.js');
+const imageKitService = require('./imageKit');
 
 
 const jwtSign = util.promisify(jwt.sign);
@@ -143,8 +144,8 @@ exports.resetPassword = async (token, newPassword) => {
     user.password = await bcrypt.hash(newPassword, 12);
 
     // Clear reset token fields
-    user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
 
     await user.save();
 
@@ -177,4 +178,54 @@ exports.changePassword = async (userId, currentPassword, newPassword) => {
     await mailer.sendPasswordResetConfirmation(user);
 
     return { message: 'Password changed successfully' };
+};
+
+// Upload profile picture
+exports.uploadProfilePicture = async (userId, file) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new APIError('User not found', 404);
+    }
+
+    if (user.profilePictureId) {
+        try {
+            await imageKitService.deleteImage(user.profilePictureId);
+        } catch (error) {
+            console.error('Failed to delete old profile picture:', error.message);
+        }
+    }
+
+    const fileName = `profile-${userId}-${Date.now()}`;
+    const result = await imageKitService.uploadImage(file.buffer, 'profile-pictures', fileName);
+
+    user.profilePicture = result.url;
+    user.profilePictureId = result.fileId;
+    await user.save();
+
+    return {
+        profilePicture: result.url,
+        thumbnailUrl: imageKitService.getThumbnailUrl(result.url)
+    };
+};
+
+// Delete profile picture
+exports.deleteProfilePicture = async (userId) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new APIError('User not found', 404);
+    }
+
+    if (!user.profilePictureId) {
+        throw new APIError('No profile picture to delete', 400);
+    }
+
+    await imageKitService.deleteImage(user.profilePictureId);
+
+    user.profilePicture = null;
+    user.profilePictureId = null;
+    await user.save();
+
+    return { message: 'Profile picture deleted successfully' };
 };
