@@ -91,17 +91,23 @@ exports.uploadPostImages = async (postId, userId, files) => {
 
     for (const file of files) {
         const fileName = `post-${postId}-${Date.now()}`;
-        const result = await imageKitService.uploadImage(file.buffer, 'post-images', fileName);
+        const result = await imageKitService.uploadImage(file.buffer, 'post-images', fileName, {
+            compress: true,
+            mimeType: file.mimetype,
+            compressionOptions: { maxWidth: 1920, maxHeight: 1080, quality: 80 }
+        });
 
         uploadedImages.push({
             url: result.url,
             fileId: result.fileId,
-            name: result.name
+            name: result.name,
+            lazyLoad: imageKitService.getLazyLoadUrls(result.url, 800),
         });
     }
 
-    // Add images to post
-    post.images.push(...uploadedImages);
+    // Not saving the lazyLoad
+    const imagesToSave = uploadedImages.map(({ url, fileId, name }) => ({ url, fileId, name }));
+    post.images.push(...imagesToSave);
     await post.save();
 
     return {

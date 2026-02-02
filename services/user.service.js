@@ -197,7 +197,11 @@ exports.uploadProfilePicture = async (userId, file) => {
     }
 
     const fileName = `profile-${userId}-${Date.now()}`;
-    const result = await imageKitService.uploadImage(file.buffer, 'profile-pictures', fileName);
+    const result = await imageKitService.uploadImage(file.buffer, 'profile-pictures', fileName, {
+        compress: true,
+        mimeType: file.mimetype,
+        compressionOptions: { maxWidth: 500, maxHeight: 500, quality: 80 }
+    });
 
     user.profilePicture = result.url;
     user.profilePictureId = result.fileId;
@@ -205,7 +209,8 @@ exports.uploadProfilePicture = async (userId, file) => {
 
     return {
         profilePicture: result.url,
-        thumbnailUrl: imageKitService.getThumbnailUrl(result.url)
+        thumbnailUrl: imageKitService.getThumbnailUrl(result.url),
+        lazyLoad: imageKitService.getLazyLoadUrls(result.url, 200)
     };
 };
 
