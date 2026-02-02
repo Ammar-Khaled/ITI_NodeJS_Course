@@ -96,3 +96,41 @@ exports.deletePostImage = async (req, res) => {
     const result = await postService.deletePostImage(id, imageId, userId);
     res.json(result);
 };
+
+// Search posts by title/content
+exports.searchPosts = async (req, res) => {
+    let { q, page = 1, limit = 10, startDate, endDate, tags, published } = req.query;
+    page = Number(page);
+    limit = Number(limit);
+    const { userId } = req.user;
+    const parsedTags = tags ? tags.split(',').map(tag => tag.trim()) : [];
+
+    let parsedPublished;
+    if (published === 'true') {
+        parsedPublished = true;
+    } else if (published === 'false') {
+        parsedPublished = false;
+    } else {
+        parsedPublished = true;
+    }
+
+    const filters = {
+        startDate,
+        endDate,
+        tags: parsedTags,
+        published: parsedPublished
+    };
+
+    const [posts, total] = await postService.searchPosts(q, filters, page, limit, userId);
+
+    res.json({
+        message: "Posts search results",
+        data: posts,
+        pagination: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit)
+        }
+    });
+};

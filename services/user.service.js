@@ -53,7 +53,7 @@ exports.signIn = async ({ email, password }) => {
     }
 
     // generate token 
-    const token = await jwtSign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = await jwtSign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
     return { token, user: { ...user.toObject(), password: undefined } };
 
@@ -233,4 +233,33 @@ exports.deleteProfilePicture = async (userId) => {
     await user.save();
 
     return { message: 'Profile picture deleted successfully' };
+};
+
+// Search users by name/email
+exports.searchUsers = async (query, page, limit) => {
+    const searchQuery = {};
+
+    // Full-text search on name and email
+    if (query) {
+        searchQuery.$text = { $search: query };
+    }
+
+    let usersQuery = User.find(searchQuery, { password: 0 });
+
+    if (query) {
+        usersQuery = usersQuery
+            .select({ score: { $meta: 'textScore' } })
+            .sort({ score: { $meta: 'textScore' } });
+    } else {
+        usersQuery = usersQuery.sort({ createdAt: -1 });
+    }
+
+    const users = await usersQuery
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean();
+
+    const total = await User.countDocuments(searchQuery);
+
+    return [users, total];
 };

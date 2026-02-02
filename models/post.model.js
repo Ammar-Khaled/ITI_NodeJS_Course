@@ -14,6 +14,10 @@ const postSchema = new mongoose.Schema({
         name: { type: String }
     }]
 }, { timestamps: true });
+
+// Text index for full-text search on title and content
+postSchema.index({ title: 'text', content: 'text' });
+
 // model
 const Post = mongoose.model('Post', postSchema);
 

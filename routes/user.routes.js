@@ -11,6 +11,9 @@ const { uploadProfilePicture } = require('../middlewares/upload');
 router.post('/sign-up', validate(schemas.users.signUpSchema), userController.signUp);
 router.post('/sign-in', validate(schemas.users.signInSchema), userController.signIn);
 
+// Search users by name/email (authenticated)
+router.get('/search', validate(schemas.users.searchUsersSchema), authenticate, userController.searchUsers);
+
 // Password reset routes (public)
 router.post('/forgot-password', validate(schemas.users.forgotPasswordSchema), userController.forgotPassword);
 router.post('/reset-password', validate(schemas.users.resetPasswordSchema), userController.resetPassword);

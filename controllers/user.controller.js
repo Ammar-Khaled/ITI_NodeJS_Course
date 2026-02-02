@@ -109,3 +109,23 @@ exports.deleteProfilePicture = async (req, res) => {
     const result = await userService.deleteProfilePicture(userId);
     res.json(result);
 };
+
+// Search users by name/email
+exports.searchUsers = async (req, res) => {
+    let { q, page = 1, limit = 10 } = req.query;
+    page = Number(page);
+    limit = Number(limit);
+
+    const [users, total] = await userService.searchUsers(q, page, limit);
+
+    res.json({
+        message: "Users search results",
+        data: users,
+        pagination: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit)
+        }
+    });
+};

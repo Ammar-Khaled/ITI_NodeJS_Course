@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema({
     passwordResetExpires: { type: Date }
 }, { timestamps: true });
 
+// Text index for full-text search on name and email
+userSchema.index({ name: 'text', email: 'text' });
+
 // model
 const User = mongoose.model('User', userSchema);
 

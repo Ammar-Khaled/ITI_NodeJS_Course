@@ -10,6 +10,9 @@ const { uploadPostImages } = require('../middlewares/upload');
 // Apply authentication to all routes
 router.use(authenticate);
 
+// full-text Search posts by title/content filters (date range, tags)
+router.get('/search', validate(schemas.posts.searchPostsSchema), postController.searchPosts);
+
 // Create a new post
 router.post('/', validate(schemas.posts.createPostSchema), postController.createPost);
 

@@ -143,3 +143,59 @@ exports.deletePostImage = async (postId, imageId, userId) => {
 
     return { message: 'Image deleted successfully', remainingImages: post.images.length };
 };
+
+// Search posts by title/content with filters
+exports.searchPosts = async (query, filters, page, limit, userId) => {
+    const searchQuery = {};
+
+    // Full-text search on title and content
+    if (query) {
+        searchQuery.$text = { $search: query };
+    }
+
+    if (filters.startDate || filters.endDate) {
+        searchQuery.createdAt = {};
+        if (filters.startDate) {
+            searchQuery.createdAt.$gte = new Date(filters.startDate);
+        }
+        if (filters.endDate) {
+            searchQuery.createdAt.$lte = new Date(filters.endDate);
+        }
+    }
+
+    if (filters.tags && filters.tags.length > 0) {
+        searchQuery.tags = { $in: filters.tags };
+    }
+
+    if (filters.published !== undefined) {
+        searchQuery.published = filters.published;
+    }
+
+
+    console.log(searchQuery);
+    let postsQuery = Post.find(searchQuery);
+
+    // Add text score projection and sort by relevance if text search is used
+    if (query) {
+        postsQuery = postsQuery
+            .select({ score: { $meta: 'textScore' } })
+            .sort({ score: { $meta: 'textScore' } });
+    } else {
+        postsQuery = postsQuery.sort({ createdAt: -1 });
+    }
+
+    const posts = await postsQuery
+        .populate('userId', 'name email')
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+    console.log(posts);
+    const postsWithOwnership = posts.map(post => {
+        post.isOwner = post.userId._id.toString() === userId;
+        return post;
+    });
+
+    const total = await Post.countDocuments(searchQuery);
+
+    return [postsWithOwnership, total];
+};

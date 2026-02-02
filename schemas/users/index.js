@@ -6,4 +6,5 @@ module.exports = {
     forgotPasswordSchema: require('./forgotPasswordSchema'),
     resetPasswordSchema: require('./resetPasswordSchema'),
     changePasswordSchema: require('./changePasswordSchema'),
+    searchUsersSchema: require('./searchUsersSchema'),
 };
