@@ -5,6 +5,7 @@ const userRoutes = require('./routes/user.routes');
 const postRoutes = require('./routes/post.routes');
 const commentRoutes = require('./routes/comment.routes');
 const likeRoutes = require('./routes/like.routes');
+const followRoutes = require('./routes/follow.routes');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
 const donationRouter = require('./routes/donation.routes');
@@ -28,6 +29,7 @@ app.use(rateLimiter);
 
 // Routes
 app.use('/users', userRoutes);
+app.use('/users', followRoutes);
 app.use('/posts', postRoutes);
 app.use('/donations', donationRouter);
 app.use('/comments', commentRoutes);

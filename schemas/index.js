@@ -4,4 +4,5 @@ module.exports = {
     donations: require('./donations'),
     comments: require('./comments'),
     likes: require('./likes'),
+    follows: require('./follows'),
 }
