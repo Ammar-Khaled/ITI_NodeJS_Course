@@ -4,10 +4,14 @@ const postController = require('../controllers/post.controller');
 const commentController = require('../controllers/comment.controller');
 const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
-const authenticate = require('../middlewares/authenticate');
+const { authenticate, optionalAuthenticate } = require('../middlewares/authenticate');
 const { uploadPostImages } = require('../middlewares/upload');
 
-// Apply authentication to all routes
+
+// Increment view count for a post (authenticated users get duplicate prevention)
+router.post('/:id/view', validate(schemas.posts.viewPostSchema), optionalAuthenticate, postController.viewPost);
+
+// Apply authentication to all routes after
 router.use(authenticate);
 
 // full-text Search posts by title/content filters (date range, tags)

@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/user.controller');
 const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
-const authenticate = require('../middlewares/authenticate');
+const { authenticate } = require('../middlewares/authenticate');
 const restrictTo = require('../middlewares/restrictTo');
 const { uploadProfilePicture } = require('../middlewares/upload');
 

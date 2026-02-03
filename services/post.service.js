@@ -144,6 +144,39 @@ exports.deletePostImage = async (postId, imageId, userId) => {
     return { message: 'Image deleted successfully', remainingImages: post.images.length };
 };
 
+exports.incrementView = async (postId, userId) => {
+    const post = await Post.findById(postId);
+    
+    if (!post) {
+        throw new APIError('Post not found', 404);
+    }
+
+    if (userId && post.viewedBy.includes(userId)) {
+        return {
+            message: 'Already viewed',
+            views: post.views,
+            alreadyViewed: true
+        };
+    }
+
+    const updateQuery = { $inc: { views: 1 } };
+    if (userId) {
+        updateQuery.$addToSet = { viewedBy: userId };
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        updateQuery,
+        { new: true }
+    );
+
+    return {
+        message: 'View recorded',
+        views: updatedPost.views,
+        alreadyViewed: false
+    };
+};
+
 // Search posts by title/content with filters
 exports.searchPosts = async (query, filters, page, limit, userId) => {
     const searchQuery = {};

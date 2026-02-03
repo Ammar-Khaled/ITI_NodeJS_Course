@@ -7,6 +7,8 @@ const postSchema = new mongoose.Schema({
     tags: { type: [String], required: false },
     published: { type: Boolean, default: false },
     likes: { type: Number, default: 0 },
+    views: { type: Number, default: 0 },
+    viewedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     images: [{
         url: { type: String, required: true },

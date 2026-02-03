@@ -22,4 +22,17 @@ const authenticate = async (req, res, next) => {
     }
 }
 
-module.exports = authenticate;
+const optionalAuthenticate = async (req, res, next) => {
+    try {
+        await authenticate(req, res, () => { });
+        // If authenticate succeeds, req.user is set
+        next();
+    } catch (error) {
+        // If authenticate fails, continue without user
+        req.user = null;
+        next();
+    }
+};
+
+
+module.exports = { authenticate, optionalAuthenticate };

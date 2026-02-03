@@ -97,6 +97,22 @@ exports.deletePostImage = async (req, res) => {
     res.json(result);
 };
 
+// Increment view count for a post
+exports.viewPost = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user?.userId;
+
+    const result = await postService.incrementView(id, userId);
+
+    res.json({
+        message: result.message,
+        data: {
+            views: result.views,
+            alreadyViewed: result.alreadyViewed
+        }
+    });
+};
+
 // Search posts by title/content
 exports.searchPosts = async (req, res) => {
     let { q, page = 1, limit = 10, startDate, endDate, tags, published } = req.query;
