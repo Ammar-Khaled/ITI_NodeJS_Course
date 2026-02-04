@@ -3,10 +3,19 @@ const APIError = require('../utils/APIError');
 
 // Create a new post
 exports.createPost = async (req, res) => {
-    const { title, content, tags, published, likes } = req.body;
+    const { title, content, tags, status, publishedAt, likes } = req.body;
     const { userId } = req.user;
 
-    const post = await postService.createPost({ title, content, tags, published, likes, userId });
+    const postData = { title, content, tags, status, likes, userId };
+
+    // Set publishedAt based on status
+    if (status === 'published') {
+        postData.publishedAt = new Date();
+    } else if (status === 'scheduled' && publishedAt) {
+        postData.publishedAt = new Date(publishedAt);
+    }
+
+    const post = await postService.createPost(postData);
 
     res.status(201).json({ message: "Post created successfully", data: post });
 };
@@ -50,9 +59,9 @@ exports.getPostById = async (req, res) => {
 exports.updatePost = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.user;
-    const { title, content, tags, published, likes } = req.body;
+    const { title, content, tags, likes } = req.body;
 
-    const updatedPost = await postService.updatePost(id, { title, content, tags, published, likes }, userId);
+    const updatedPost = await postService.updatePost(id, { title, content, tags, likes }, userId);
 
     if (!updatedPost) {
         throw new APIError("Post not found", 404);
@@ -115,26 +124,17 @@ exports.viewPost = async (req, res) => {
 
 // Search posts by title/content
 exports.searchPosts = async (req, res) => {
-    let { q, page = 1, limit = 10, startDate, endDate, tags, published } = req.query;
+    let { q, page = 1, limit = 10, startDate, endDate, tags, status } = req.query;
     page = Number(page);
     limit = Number(limit);
     const { userId } = req.user;
     const parsedTags = tags ? tags.split(',').map(tag => tag.trim()) : [];
 
-    let parsedPublished;
-    if (published === 'true') {
-        parsedPublished = true;
-    } else if (published === 'false') {
-        parsedPublished = false;
-    } else {
-        parsedPublished = true;
-    }
-
     const filters = {
         startDate,
         endDate,
         tags: parsedTags,
-        published: parsedPublished
+        status: status
     };
 
     const [posts, total] = await postService.searchPosts(q, filters, page, limit, userId);
@@ -149,4 +149,46 @@ exports.searchPosts = async (req, res) => {
             totalPages: Math.ceil(total / limit)
         }
     });
+};
+
+// Get user's draft posts
+exports.getDrafts = async (req, res) => {
+    let { page = 1, limit = 10 } = req.query;
+    page = Number(page);
+    limit = Number(limit);
+    const { userId } = req.user;
+
+    const [drafts, total] = await postService.getUserDrafts(userId, page, limit);
+
+    res.json({
+        message: "Drafts fetched successfully",
+        data: drafts,
+        pagination: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit)
+        }
+    });
+};
+
+// Publish a draft post
+exports.publishPost = async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.user;
+
+    const publishedPost = await postService.publishPost(id, userId);
+
+    res.json({ message: "Post published successfully", data: publishedPost });
+};
+
+// Schedule a post for future publication
+exports.schedulePost = async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.user;
+    const { publishedAt } = req.body;
+
+    const scheduledPost = await postService.schedulePost(id, userId, new Date(publishedAt));
+
+    res.json({ message: "Post scheduled successfully", data: scheduledPost });
 };

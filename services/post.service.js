@@ -146,7 +146,7 @@ exports.deletePostImage = async (postId, imageId, userId) => {
 
 exports.incrementView = async (postId, userId) => {
     const post = await Post.findById(postId);
-    
+
     if (!post) {
         throw new APIError('Post not found', 404);
     }
@@ -200,8 +200,8 @@ exports.searchPosts = async (query, filters, page, limit, userId) => {
         searchQuery.tags = { $in: filters.tags };
     }
 
-    if (filters.published !== undefined) {
-        searchQuery.published = filters.published;
+    if (filters.status) {
+        searchQuery.status = filters.status;
     }
 
 
@@ -231,4 +231,69 @@ exports.searchPosts = async (query, filters, page, limit, userId) => {
     const total = await Post.countDocuments(searchQuery);
 
     return [postsWithOwnership, total];
+};
+
+// Get user's draft posts
+exports.getUserDrafts = async (userId, page, limit) => {
+    const query = { userId, status: 'draft' };
+
+    const drafts = await Post.find(query)
+        .sort({ updatedAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .populate('userId', 'name email');
+
+    const total = await Post.countDocuments(query);
+
+    return [drafts, total];
+};
+
+// Publish a draft post
+exports.publishPost = async (postId, userId) => {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+        throw new APIError('Post not found', 404);
+    }
+
+    if (post.userId.toString() !== userId) {
+        throw new APIError('Only the post author can publish this post', 403);
+    }
+
+    if (post.status === 'published') {
+        throw new APIError('Post is already published', 400);
+    }
+
+    post.status = 'published';
+    post.publishedAt = new Date();
+    await post.save();
+
+    return post;
+};
+
+// Schedule a post for future publication
+exports.schedulePost = async (postId, userId, publishedAt) => {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+        throw new APIError('Post not found', 404);
+    }
+
+    if (post.userId.toString() !== userId) {
+        throw new APIError('Only the post author can schedule this post', 403);
+    }
+
+    if (post.status === 'published') {
+        throw new APIError('Cannot schedule an already published post', 400);
+    }
+
+    if (publishedAt <= new Date()) {
+        throw new APIError('Scheduled date must be in the future', 400);
+    }
+
+    post.status = 'scheduled';
+    post.publishedAt = publishedAt;  // TBD
+    await post.save();
+
+    return post;
 };

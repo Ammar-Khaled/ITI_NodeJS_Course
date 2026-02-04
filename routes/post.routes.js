@@ -18,6 +18,9 @@ router.use(authenticate);
 // full-text Search posts by title/content filters (date range, tags)
 router.get('/search', validate(schemas.posts.searchPostsSchema), postController.searchPosts);
 
+// Get user's draft posts
+router.get('/drafts', validate(schemas.posts.getDraftsSchema), postController.getDrafts);
+
 // Create a new post
 router.post('/', validate(schemas.posts.createPostSchema), postController.createPost);
 
@@ -32,6 +35,12 @@ router.patch('/:id', validate(schemas.posts.updatePostSchema), postController.up
 
 // Delete post by ID
 router.delete('/:id', postController.deletePost);
+
+// Publish a draft post (post author only)
+router.post('/:id/publish', validate(schemas.posts.publishPostSchema), postController.publishPost);
+
+// Schedule a post for future publication (post author only)
+router.post('/:id/schedule', validate(schemas.posts.schedulePostSchema), postController.schedulePost);
 
 // Post images routes
 router.post('/:id/images', uploadPostImages, postController.uploadPostImages);

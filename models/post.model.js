@@ -5,7 +5,12 @@ const postSchema = new mongoose.Schema({
     title: { type: String, required: true },
     content: { type: String, required: true },
     tags: { type: [String], required: false },
-    published: { type: Boolean, default: false },
+    status: { 
+        type: String, 
+        enum: ['draft', 'scheduled', 'published'], 
+        default: 'draft' 
+    },
+    publishedAt: { type: Date, default: null },
     likes: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
     viewedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

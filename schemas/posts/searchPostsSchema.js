@@ -8,7 +8,7 @@ const searchPostsSchema = {
         startDate: Joi.date().iso().optional(),
         endDate: Joi.date().iso().min(Joi.ref('startDate')).optional(),
         tags: Joi.string().optional(),
-        published: Joi.boolean().optional()
+        status: Joi.string().valid('draft', 'scheduled', 'published').optional()
     })
 };
 

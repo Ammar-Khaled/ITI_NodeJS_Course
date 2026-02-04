@@ -5,7 +5,12 @@ const createPostSchema = {
         title: Joi.string().min(3).max(200).required(),
         content: Joi.string().min(10).required(),
         tags: Joi.array().items(Joi.string()).optional(),
-        published: Joi.boolean().optional().default(false),
+        status: Joi.string().valid('draft', 'scheduled', 'published').optional().default('draft'),
+        publishedAt: Joi.date().iso().optional().when('status', {
+            is: 'scheduled',
+            then: Joi.date().iso().greater('now').required(),
+            otherwise: Joi.forbidden()
+        }),
         likes: Joi.number().min(0).optional().default(0)
     })
 };
