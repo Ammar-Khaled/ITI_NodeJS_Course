@@ -6,6 +6,7 @@ const postRoutes = require('./routes/post.routes');
 const commentRoutes = require('./routes/comment.routes');
 const likeRoutes = require('./routes/like.routes');
 const followRoutes = require('./routes/follow.routes');
+const notificationRoutes = require('./routes/notification.routes');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
 const donationRouter = require('./routes/donation.routes');
@@ -34,6 +35,7 @@ app.use('/posts', postRoutes);
 app.use('/donations', donationRouter);
 app.use('/comments', commentRoutes);
 app.use('/likes', likeRoutes);
+app.use('/notifications', notificationRoutes);
 
 // Global Error Handler
 app.use(errorHandler);

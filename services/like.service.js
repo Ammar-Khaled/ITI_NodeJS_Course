@@ -2,6 +2,7 @@ const Like = require('../models/like.model');
 const Post = require('../models/post.model');
 const Comment = require('../models/comment.model');
 const APIError = require('../utils/APIError');
+const { createNotification } = require('./notification.service');
 
 
 const toggleLike = async (userId, targetType, targetId) => {
@@ -37,6 +38,22 @@ const toggleLike = async (userId, targetType, targetId) => {
         console.log(updatedTarget);
         likesCount = updatedTarget.likes;
         liked = true;
+
+        (async () => {
+            try {
+                const ownerId = targetType === 'Post' ? target.userId : target.userId;
+                
+                await createNotification({
+                    userId: ownerId,
+                    type: 'like',
+                    relatedUserId: userId,
+                    relatedPostId: targetType === 'Post' ? targetId : target.postId,
+                    relatedCommentId: targetType === 'Comment' ? targetId : null
+                });
+            } catch (err) {
+                console.error('Failed to create like notification:', err);
+            }
+        })();
     }
 
     return {

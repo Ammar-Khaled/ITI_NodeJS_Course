@@ -1,6 +1,7 @@
 const Follow = require('../models/follow.model');
 const User = require('../models/user.model');
 const APIError = require('../utils/APIError');
+const { createNotification } = require('./notification.service');
 
 
 const followUser = async (followerId, followingId) => {
@@ -21,6 +22,18 @@ const followUser = async (followerId, followingId) => {
     }
 
     const follow = await Follow.create({ followerId, followingId });
+
+    (async () => {
+        try {
+            await createNotification({
+                userId: followingId,
+                type: 'follow',
+                relatedUserId: followerId
+            });
+        } catch (err) {
+            console.error('Failed to create follow notification:', err);
+        }
+    })();
 
     return follow;
 };

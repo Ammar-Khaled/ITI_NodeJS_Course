@@ -3,6 +3,7 @@ const Post = require('../models/post.model');
 const User = require('../models/user.model');
 const APIError = require('../utils/APIError');
 const { sendCommentNotification, sendReplyNotification } = require('./email');
+const { createNotification } = require('./notification.service');
 
 const MAX_COMMENT_DEPTH = 2; // Max nesting level (0 = root, 1 = reply, 2 = reply to reply)
 
@@ -54,6 +55,15 @@ const createComment = async (commentData, userId) => {
                         comment,               // reply
                         post                   // post
                     );
+
+                    // Create in-app notification for reply
+                    await createNotification({
+                        userId: parentComment.userId._id,
+                        type: 'reply',
+                        relatedUserId: userId,
+                        relatedPostId: comment.postId,
+                        relatedCommentId: comment._id
+                    });
                 }
             } else {
                 // This is a new comment on a post
@@ -64,6 +74,15 @@ const createComment = async (commentData, userId) => {
                         post,         // post
                         comment       // comment
                     );
+
+                    // Create in-app notification for comment
+                    await createNotification({
+                        userId: post.userId._id,
+                        type: 'comment',
+                        relatedUserId: userId,
+                        relatedPostId: post._id,
+                        relatedCommentId: comment._id
+                    });
                 }
             }
         } catch (err) {
