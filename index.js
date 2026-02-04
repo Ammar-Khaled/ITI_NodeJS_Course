@@ -15,6 +15,7 @@ const { sanitizeMongoInput } = require('express-v5-mongo-sanitize');
 const { xss } = require('express-xss-sanitizer');
 const hpp = require('hpp');
 const rateLimiter = require('./middlewares/rateLimiter');
+const scheduler = require('./services/scheduler');
 
 const app = express();
 
@@ -44,7 +45,8 @@ const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGODB_URI;
 app.listen(port, () => {
     mongoose.connect(mongoUri).then(() => {
-        console.log('✅✅ Connected to MongoDB')
+        console.log('✅✅ Connected to MongoDB');
+        scheduler.init();
     }).catch((err) => {
         console.log('❌❌ Connected to MongoDB')
         console.log(err)
