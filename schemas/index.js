@@ -5,4 +5,5 @@ module.exports = {
     comments: require('./comments'),
     likes: require('./likes'),
     follows: require('./follows'),
+    bookmarks: require('./bookmarks'),
 }

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/post.controller');
 const commentController = require('../controllers/comment.controller');
+const bookmarkController = require('../controllers/bookmark.controller');
 const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
 const { authenticate, optionalAuthenticate } = require('../middlewares/authenticate');
@@ -38,5 +39,10 @@ router.delete('/:id/images/:imageId', postController.deletePostImage);
 
 // Get comments for a specific post
 router.get('/:postId/comments', commentController.getCommentsByPost);
+
+// Bookmark routes
+router.post('/:postId/bookmark', validate(schemas.bookmarks.bookmarkPostSchema), bookmarkController.bookmarkPost);
+router.delete('/:postId/bookmark', validate(schemas.bookmarks.removeBookmarkSchema), bookmarkController.removeBookmark);
+router.get('/:postId/bookmark/check', validate(schemas.bookmarks.bookmarkPostSchema), bookmarkController.checkBookmarked);
 
 module.exports = router;

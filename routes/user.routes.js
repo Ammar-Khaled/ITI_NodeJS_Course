@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/user.controller');
+const bookmarkController = require('../controllers/bookmark.controller');
 const schemas = require('../schemas');
 const validate = require('../middlewares/validate');
 const { authenticate } = require('../middlewares/authenticate');
@@ -24,6 +25,9 @@ router.patch('/change-password', validate(schemas.users.changePasswordSchema), a
 // Profile picture routes (authenticated)
 router.post('/profile-picture', authenticate, uploadProfilePicture, userController.uploadProfilePicture);
 router.delete('/profile-picture', authenticate, userController.deleteProfilePicture);
+
+// Bookmarks route (authenticated)
+router.get('/bookmarks', authenticate, validate(schemas.bookmarks.getUserBookmarksSchema), bookmarkController.getUserBookmarks);
 
 // Get all users
 router.get('/', authenticate, restrictTo(['admin']), validate(schemas.users.getAllUsersSchema), userController.getAllUsers);
