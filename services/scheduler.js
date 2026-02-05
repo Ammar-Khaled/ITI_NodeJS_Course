@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const Post = require('../models/post.model');
+const logger = require('../utils/logger');
 
 
 class Scheduler {
@@ -9,7 +10,7 @@ class Scheduler {
 
     init() {
         this.publishingScheduledPosts();
-        console.log('✅✅ Scheduler initialized successfully');
+        logger.info('Scheduler initialized successfully');
     }
 
     publishingScheduledPosts() {
@@ -43,19 +44,19 @@ class Scheduler {
                 }
             );
 
-            console.log(`Published ${result.modifiedCount} post(s) successfully`);
+            logger.info(`Published ${result.modifiedCount} post(s) successfully`);
             postsToPublish.forEach(post => {
-                console.log(`   - Published: "${post.title}" (ID: ${post._id})`);
+                logger.info(`   - Published: "${post.title}" (ID: ${post._id})`);
             });
 
         } catch (error) {
-            console.error('❌❌ Error publishing scheduled posts:', error.message);
+            logger.error('Error publishing scheduled posts:', error);
         }
     }
 
     stop() {
         this.tasks.forEach(task => task.stop());
-        console.log('Scheduler stopped');
+        logger.info('Scheduler stopped');
     }
 }
 

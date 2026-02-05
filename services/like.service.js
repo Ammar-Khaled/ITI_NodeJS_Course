@@ -26,7 +26,6 @@ const toggleLike = async (userId, targetType, targetId) => {
 
         // Decrement likes count on target
         updatedTarget = await Model.findByIdAndUpdate(targetId, { $inc: { likes: -1 } }, { new: true });
-        console.log(updatedTarget);
         likesCount = updatedTarget.likes;
         liked = false;
     } else {
@@ -35,7 +34,6 @@ const toggleLike = async (userId, targetType, targetId) => {
 
         // Increment likes count on target
         updatedTarget = await Model.findByIdAndUpdate(targetId, { $inc: { likes: 1 } }, { new: true });
-        console.log(updatedTarget);
         likesCount = updatedTarget.likes;
         liked = true;
 

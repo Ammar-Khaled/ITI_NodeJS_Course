@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const userRoutes = require('./routes/user.routes');
 const postRoutes = require('./routes/post.routes');
 const commentRoutes = require('./routes/comment.routes');
@@ -16,6 +17,7 @@ const { xss } = require('express-xss-sanitizer');
 const hpp = require('hpp');
 const rateLimiter = require('./middlewares/rateLimiter');
 const scheduler = require('./services/scheduler');
+const logger = require('./utils/logger');
 
 const app = express();
 
@@ -28,6 +30,11 @@ app.use(sanitizeMongoInput);
 app.use(xss());
 app.use(hpp());
 app.use(rateLimiter);
+
+// Morgan HTTP request logging
+app.use(morgan('short', {
+    stream: logger.stream,
+}));
 
 // Routes
 app.use('/users', userRoutes);
@@ -45,11 +52,10 @@ const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGODB_URI;
 app.listen(port, () => {
     mongoose.connect(mongoUri).then(() => {
-        console.log('✅✅ Connected to MongoDB');
+        logger.info('Connected to MongoDB');
         scheduler.init();
     }).catch((err) => {
-        console.log('❌❌ Connected to MongoDB')
-        console.log(err)
+        logger.error('Failed to connect to MongoDB', { error: err.message });
     });
-    console.log('✅✅ Server is running on Port:', port);
+    logger.info(`Server is running on Port: ${port}`);
 });

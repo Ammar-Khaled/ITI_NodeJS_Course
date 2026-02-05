@@ -1,7 +1,12 @@
 const APIError = require('../utils/APIError');
+const logger = require('../utils/logger');
 
 module.exports = (err, req, res, next) => {
-    console.error("❌❌ Error:", err.stack);
+    logger.error(err.message, {
+        message: err.message,
+        stack: err.stack,
+        name: err.name,
+    });
 
     if (err instanceof APIError) {
         return res.status(err.statusCode).json({ message: err.message, success: false, isClientError: err.isClientError })

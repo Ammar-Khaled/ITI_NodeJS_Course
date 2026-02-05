@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
+const logger = require('../utils/logger');
 
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
@@ -43,7 +44,7 @@ async function sendWelcomeEmail(user) {
             html
         });
 
-        console.log("Welcome email sent: %s", info.messageId);
+        logger.info("Welcome email sent: %s", info.messageId);
         return info;
     } catch (err) {
         console.error("Error sending welcome email:", err);
@@ -67,7 +68,7 @@ async function sendPasswordResetEmail(user, resetToken) {
             html
         });
 
-        console.log("Password reset email sent: %s", info.messageId);
+        logger.info("Password reset email sent: %s", info.messageId);
         return info;
     } catch (err) {
         console.error("Error sending password reset email:", err);
@@ -90,7 +91,7 @@ async function sendPasswordResetConfirmation(user) {
             html
         });
 
-        console.log("Password reset confirmation sent: %s", info.messageId);
+        logger.info("Password reset confirmation sent: %s", info.messageId);
         return info;
     } catch (err) {
         console.error("Error sending password reset confirmation:", err);
@@ -127,7 +128,7 @@ async function sendCommentNotification(postAuthor, commenter, post, comment) {
             html
         });
 
-        console.log("Comment notification sent: %s", info.messageId);
+        logger.info("Comment notification sent: %s", info.messageId);
         return info;
     } catch (err) {
         console.error("Error sending comment notification:", err);
@@ -161,7 +162,7 @@ async function sendReplyNotification(commentAuthor, replier, comment, reply, pos
             html
         });
 
-        console.log("Reply notification sent: %s", info.messageId);
+        logger.info("Reply notification sent: %s", info.messageId);
         return info;
     } catch (err) {
         console.error("Error sending reply notification:", err);

@@ -10,7 +10,6 @@ const createDonation = async function (req, res) {
     //     throw new APIError("Failed to create a payment session", 503);
     // }
 
-    console.log(session);
 
     const donation = await donationService.createDonation({
         sessionId: session._id,

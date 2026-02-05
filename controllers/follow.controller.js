@@ -51,8 +51,6 @@ exports.getFollowing = async (req, res) => {
 exports.checkFollowing = async (req, res) => {
     const { userId: followingId } = req.params;
     const { userId: followerId } = req.user;
-    console.log("Check")
-    console.log(req.user)
     const isFollowing = await followService.isFollowing(followerId, followingId);
 
     res.status(200).json({

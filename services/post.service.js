@@ -205,7 +205,6 @@ exports.searchPosts = async (query, filters, page, limit, userId) => {
     }
 
 
-    console.log(searchQuery);
     let postsQuery = Post.find(searchQuery);
 
     // Add text score projection and sort by relevance if text search is used
@@ -222,7 +221,6 @@ exports.searchPosts = async (query, filters, page, limit, userId) => {
         .skip((page - 1) * limit)
         .limit(limit);
 
-    console.log(posts);
     const postsWithOwnership = posts.map(post => {
         post.isOwner = post.userId._id.toString() === userId;
         return post;
