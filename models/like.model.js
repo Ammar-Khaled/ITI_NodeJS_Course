@@ -26,10 +26,6 @@ const likeSchema = new mongoose.Schema(
 // Compound unique index to ensure a user can only like a target once
 likeSchema.index({ userId: 1, targetType: 1, targetId: 1 }, { unique: true });
 
-// Index for efficient queries
-// likeSchema.index({ targetType: 1, targetId: 1 });
-// likeSchema.index({ userId: 1 });
-
 const Like = mongoose.model('Like', likeSchema);
 
 module.exports = Like;

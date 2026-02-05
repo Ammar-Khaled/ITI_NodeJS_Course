@@ -25,6 +25,9 @@ const postSchema = new mongoose.Schema({
 // Text index for full-text search on title and content
 postSchema.index({ title: 'text', content: 'text' });
 
+postSchema.index({ userId: 1, status: 1 })
+postSchema.index({ createdAt: -1 })
+
 // model
 const Post = mongoose.model('Post', postSchema);
 
