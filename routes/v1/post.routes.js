@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const postController = require('../controllers/post.controller');
-const commentController = require('../controllers/comment.controller');
-const bookmarkController = require('../controllers/bookmark.controller');
-const schemas = require('../schemas');
-const validate = require('../middlewares/validate');
-const { authenticate, optionalAuthenticate } = require('../middlewares/authenticate');
-const { uploadPostImages } = require('../middlewares/upload');
+const postController = require('../../controllers/post.controller');
+const commentController = require('../../controllers/comment.controller');
+const bookmarkController = require('../../controllers/bookmark.controller');
+const schemas = require('../../schemas');
+const validate = require('../../middlewares/validate');
+const { authenticate, optionalAuthenticate } = require('../../middlewares/authenticate');
+const { uploadPostImages } = require('../../middlewares/upload');
 
 
 // Increment view count for a post (authenticated users get duplicate prevention)

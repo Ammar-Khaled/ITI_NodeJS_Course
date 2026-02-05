@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const commentController = require('../controllers/comment.controller');
-const schemas = require('../schemas');
-const validate = require('../middlewares/validate');
-const { authenticate } = require('../middlewares/authenticate');
+const commentController = require('../../controllers/comment.controller');
+const schemas = require('../../schemas');
+const validate = require('../../middlewares/validate');
+const { authenticate } = require('../../middlewares/authenticate');
 
 // Apply authentication to all routes
 router.use(authenticate);

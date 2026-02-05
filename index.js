@@ -2,15 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-const userRoutes = require('./routes/user.routes');
-const postRoutes = require('./routes/post.routes');
-const commentRoutes = require('./routes/comment.routes');
-const likeRoutes = require('./routes/like.routes');
-const followRoutes = require('./routes/follow.routes');
-const notificationRoutes = require('./routes/notification.routes');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
-const donationRouter = require('./routes/donation.routes');
 const helmet = require('helmet');
 const { sanitizeMongoInput } = require('express-v5-mongo-sanitize');
 const { xss } = require('express-xss-sanitizer');
@@ -18,6 +11,9 @@ const hpp = require('hpp');
 const rateLimiter = require('./middlewares/rateLimiter');
 const scheduler = require('./services/scheduler');
 const logger = require('./utils/logger');
+
+// API version routers
+const v1Router = require('./routes/v1');
 
 const app = express();
 
@@ -36,14 +32,8 @@ app.use(morgan('short', {
     stream: logger.stream,
 }));
 
-// Routes
-app.use('/users', userRoutes);
-app.use('/users', followRoutes);
-app.use('/posts', postRoutes);
-app.use('/donations', donationRouter);
-app.use('/comments', commentRoutes);
-app.use('/likes', likeRoutes);
-app.use('/notifications', notificationRoutes);
+// Routes - API v1
+app.use('/api/v1', v1Router);
 
 // Global Error Handler
 app.use(errorHandler);

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const notificationController = require('../controllers/notification.controller');
-const schemas = require('../schemas');
-const validate = require('../middlewares/validate');
-const { authenticate } = require('../middlewares/authenticate');
+const notificationController = require('../../controllers/notification.controller');
+const schemas = require('../../schemas');
+const validate = require('../../middlewares/validate');
+const { authenticate } = require('../../middlewares/authenticate');
 
 // All notification routes require authentication
 router.use(authenticate);

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const likeController = require('../controllers/like.controller');
-const schemas = require('../schemas');
-const validate = require('../middlewares/validate');
-const { authenticate } = require('../middlewares/authenticate');
+const likeController = require('../../controllers/like.controller');
+const schemas = require('../../schemas');
+const validate = require('../../middlewares/validate');
+const { authenticate } = require('../../middlewares/authenticate');
 
 router.use(authenticate);
 
