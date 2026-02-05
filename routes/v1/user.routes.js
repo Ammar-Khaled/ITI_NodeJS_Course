@@ -7,23 +7,24 @@ const validate = require('../../middlewares/validate');
 const { authenticate } = require('../../middlewares/authenticate');
 const restrictTo = require('../../middlewares/restrictTo');
 const { uploadProfilePicture } = require('../../middlewares/upload');
+const { authLimiter, passwordResetLimiter, fileUploadLimiter } = require('../../middlewares/rateLimiter');
 
 
-router.post('/sign-up', validate(schemas.users.signUpSchema), userController.signUp);
-router.post('/sign-in', validate(schemas.users.signInSchema), userController.signIn);
+router.post('/sign-up', authLimiter, validate(schemas.users.signUpSchema), userController.signUp);
+router.post('/sign-in', authLimiter, validate(schemas.users.signInSchema), userController.signIn);
 
 // Search users by name/email (authenticated)
 router.get('/search', validate(schemas.users.searchUsersSchema), authenticate, userController.searchUsers);
 
 // Password reset routes (public)
-router.post('/forgot-password', validate(schemas.users.forgotPasswordSchema), userController.forgotPassword);
-router.post('/reset-password', validate(schemas.users.resetPasswordSchema), userController.resetPassword);
+router.post('/forgot-password', passwordResetLimiter, validate(schemas.users.forgotPasswordSchema), userController.forgotPassword);
+router.post('/reset-password', passwordResetLimiter, validate(schemas.users.resetPasswordSchema), userController.resetPassword);
 
 // Change password (authenticated)
 router.patch('/change-password', validate(schemas.users.changePasswordSchema), authenticate, userController.changePassword);
 
 // Profile picture routes (authenticated)
-router.post('/profile-picture', authenticate, uploadProfilePicture, userController.uploadProfilePicture);
+router.post('/profile-picture', authenticate, fileUploadLimiter, uploadProfilePicture, userController.uploadProfilePicture);
 router.delete('/profile-picture', authenticate, userController.deleteProfilePicture);
 
 // Bookmarks route (authenticated)

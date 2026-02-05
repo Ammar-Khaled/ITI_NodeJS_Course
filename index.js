@@ -8,7 +8,7 @@ const helmet = require('helmet');
 const { sanitizeMongoInput } = require('express-v5-mongo-sanitize');
 const { xss } = require('express-xss-sanitizer');
 const hpp = require('hpp');
-const rateLimiter = require('./middlewares/rateLimiter');
+const { generalLimiter } = require('./middlewares/rateLimiter');
 const scheduler = require('./services/scheduler');
 const logger = require('./utils/logger');
 
@@ -25,7 +25,7 @@ app.use(helmet())
 app.use(sanitizeMongoInput);
 app.use(xss());
 app.use(hpp());
-app.use(rateLimiter);
+app.use(generalLimiter);
 
 // Morgan HTTP request logging
 app.use(morgan('short', {

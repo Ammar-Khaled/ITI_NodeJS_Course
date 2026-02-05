@@ -7,6 +7,7 @@ const schemas = require('../../schemas');
 const validate = require('../../middlewares/validate');
 const { authenticate, optionalAuthenticate } = require('../../middlewares/authenticate');
 const { uploadPostImages } = require('../../middlewares/upload');
+const { fileUploadLimiter } = require('../../middlewares/rateLimiter');
 
 
 // Increment view count for a post (authenticated users get duplicate prevention)
@@ -43,7 +44,7 @@ router.post('/:id/publish', validate(schemas.posts.publishPostSchema), postContr
 router.post('/:id/schedule', validate(schemas.posts.schedulePostSchema), postController.schedulePost);
 
 // Post images routes
-router.post('/:id/images', uploadPostImages, postController.uploadPostImages);
+router.post('/:id/images', fileUploadLimiter, uploadPostImages, postController.uploadPostImages);
 router.delete('/:id/images/:imageId', postController.deletePostImage);
 
 // Get comments for a specific post
